@@ -1,23 +1,41 @@
 # JOYRIDE
 
-Google Assistance cars browser
+Google Actions Application cars browser.
 
-The first and total hands free/frictionless cars browser application link to bright Accelerate engine.
+## *Joyride’s* summary
 
-Application to allow users browse for cars to buy start the buying process.
+This frictionless solution allows clients to find a car to buy and test drive in seconds 10x faster than the web or mobile application on the market.
+
+With Joyride Cars' Dealers will have access to more than 39 millions of American’s devices, such great potential that they are missing right now.
+
+Joyride will break the frontier of the Cars' Dealers web world creating an unprecedented revenues for the business.
 
 ## Hot features
+___
 
-- Voice over car search
-- Submit a car buying offer to the dealer.
-- Schedule a Test Drive appointment.
-- Receive notifications of the deal status.
-- Update the deal offer.
+`Joyride` is a Google’s Actions application which allows users interact via voice commands with Cars' Dealers and `perform the next actions`:
+- Search for cars
+- Select a car and submit an offer/lead
+- Schedule a test drive appointment
+- Receive deal detail notifications
 
-## How to test
 
-1- Talk to Joy Ride
-2- I want to find a Nissan Altima
-3- Select first one
-4- Schedule test drive appointment on December 21 at 10am
-6- End my search
+## *Business Value* for Cars' Dealer owners
+___
+
+* Leads increase
+* Accelerate work flow optimization and simplification
+* Engagement increase
+* Conversion increase
+* Revenue increase
+* Conversion cost decrease
+
+## How to test?
+___
+> On Google Assistance, Google Home or any other device which the same service interface.
+
+1. Talk to Joy Ride
+2. I want to find a Nissan Altima
+3. Select first one
+4. Schedule test drive appointment on December 21 at 10am
+6. End my search
