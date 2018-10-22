@@ -67,13 +67,21 @@ const initSearch = (make, model, conv) => {
 
 const searchCar = (conv, { make, model }) => {
   const { response, carsListPointer, currentListedCars } = initSearch(make, model, conv);
+  const initialQuestion =
+    'Would you like to select one of this cars or do you prefer to check more cars from our search?';
 
   if (carsListPointer === ((conv.user.storage as any).carsListPointer || 0)) {
     // Respond with a list with the first cars founds by the cars browser.
     conv.ask("Sorry but we don't have that kind of car in our inventory.");
     conv.ask('Would you like to find another car?');
     // Suggestions will be placed at the end of the response
-    conv.ask(new Suggestions('Yes, find a Nissan Altima', 'Find me a Honda Accord', 'Search for a Nissan Rogue'));
+    conv.ask(
+      new Suggestions(
+        'Yes, find a Nissan Altima',
+        'Find me a Honda Accord',
+        'Search for a Nissan Rogue'
+      )
+    );
   } else {
     // Respond with a list with the first cars founds by the cars browser.
     (conv.user.storage as any).carsListPointer = carsListPointer; // Saving search state in the user profile storage
@@ -81,6 +89,17 @@ const searchCar = (conv, { make, model }) => {
 
     if (!conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
       conv.ask(response);
+
+      const ssml =
+        '<speak>' +
+        `${initialQuestion} <break time="2" />` +
+        '<p><s>Here you have some select examples:</s></p>' +
+        '<p><s>Select the first one.</s></p>' +
+        '<p><s>The second one.</s></p>' +
+        '<p><s>Pick the third one.</s></p>' +
+        '</speak>';
+
+      conv.ask(ssml);
     } else {
       // Create a list of cars to show in the screen
       if (currentListedCars.length) {
@@ -96,13 +115,12 @@ const searchCar = (conv, { make, model }) => {
           })
         );
       }
-    }
-    conv.ask(
-      'Would you like to select one of this cars or do you prefer to check more cars from our search?'
-    );
 
-    // Suggestions will be placed at the end of the response
-    conv.ask(new Suggestions('Select the first one', 'Second one', 'Select the third one'));
+      conv.ask(initialQuestion);
+
+      // Suggestions will be placed at the end of the response
+      conv.ask(new Suggestions('Select the first one', 'Second one', 'Select the third one'));
+    }
   }
 };
 
