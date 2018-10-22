@@ -16,12 +16,12 @@ app.intent('Default Welcome Intent', defaultWelcomeIntent as any);
 // The intent collects the parameters named 'make' and 'model' for a desire car to search.
 app.intent('search car', searchCar as any);
 
-// Handle the Dialogflow intent named 'schedule test drive'.
-// The intent collects the parameters named 'date' and 'time' to be use in the test drive appointment schedule.
-app.intent('schedule test drive', scheduleTestDrive as any);
-
 // Handle the Dialogflow intent named 'vehicle make and model'.
 // The intent collects the parameters named 'make' and 'model' for a desire car to search.
 app.intent('select car', selectCar as any);
+
+// Handle the Dialogflow intent named 'schedule test drive'.
+// The intent collects the parameters named 'date' and 'time' to be use in the test drive appointment schedule.
+app.intent('schedule test drive', scheduleTestDrive as any);
 
 export const searchVehicle = functions.https.onRequest(app);
