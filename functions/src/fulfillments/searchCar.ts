@@ -73,7 +73,7 @@ const searchCar = (conv, { make, model }) => {
     conv.ask("Sorry but we don't have that kind of car in our inventory.");
     conv.ask('Would you like to find another car?');
     // Suggestions will be placed at the end of the response
-    conv.ask(new Suggestions('Yes, let search for a Nissan Altima', 'Search for Honda Accord'));
+    conv.ask(new Suggestions('Yes, find a Nissan Altima', 'Find me a Honda Accord', 'Search for a Nissan Rogue'));
   } else {
     // Respond with a list with the first cars founds by the cars browser.
     (conv.user.storage as any).carsListPointer = carsListPointer; // Saving search state in the user profile storage
