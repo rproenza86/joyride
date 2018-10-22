@@ -37,7 +37,7 @@ const showCarDetailsTable = (car, conv) => {
       })
     })
   );
-}
+};
 
 const getCarDetails = (car, conv) => {
   const response = `Hey! Here you have more details about the ${car.make}  ${car.model}:
@@ -67,10 +67,30 @@ const showCarDetailsCard = (car, conv) => {
 };
 
 const askForScheduleTestDrive = conv => {
-  conv.ask('Would you like to schedule a test drive  appointment?');
+  const initialQuestion = 'Would you like to book a JOYRIDE of your dreamed car?';
 
-  // Suggestions will be placed at the end of the response
-  conv.ask(new Suggestions('Schedule test drive', 'Test drive appointment'));
+  if (conv.screen) {
+    conv.ask(initialQuestion);
+    conv.ask(
+      new Suggestions(
+        'Book me a JOYRIDE',
+        'Get a JOYRIDE arrangement',
+        'Arrange me a JOYRIDE',
+        'Finish my search'
+      )
+    );
+  } else {
+    const ssml =
+      '<speak>' +
+      `${initialQuestion} <break time="2" />` +
+      '<p><s>Here you have some answer examples:</s></p>' +
+      '<p><s>Yes please, help me to book a JOYRIDE.</s></p>' +
+      '<p><s>No thanks. I want to finish my search.</s></p>' +
+      '<p><s>Absolutely! Arrange me a JOYRIDE.</s></p>' +
+      '</speak>';
+
+    conv.ask(ssml);
+  }
 };
 
 const selectCar = (conv, { carSelection }) => {

@@ -4,22 +4,12 @@ import { BACKGROUND_IMAGE } from './../constants';
 import { sendText } from './../services/messageNotification';
 import { logger } from './../utils/logger';
 
-const scheduleTestDrive = (conv, { date, time }) => {
-  const formatedDate = moment(new Date(date[0])).format('LL'); // better capture for date
+const scheduleTestDrive = (conv, { dateTime }) => {
+  const formatedDateTime = moment(new Date(dateTime.date_time)).format('LLLL');
 
-  const formatedTime = moment(new Date(time[0])).format('hh:mm:ss a'); // better capture for time
+  logger('scheduleTestDrive intent: dateTime', { dateTime, formatedDateTime });
 
-  const completeFormatedDate = ` ${formatedDate} ${formatedTime}`;
-
-  logger('scheduleTestDrive intent: date, time', {
-    date,
-    formatedDate,
-    time,
-    formatedTime,
-    completeFormatedDate
-  });
-
-  const textResponse = `You are set. Your test drive appointment was scheduled for  ${completeFormatedDate}. Check your email inbox for more details.`;
+  const textResponse = `You are set. Your test drive appointment was scheduled for  ${formatedDateTime}. Check your email inbox for more details.`;
 
   // TODO: Use just for demo til the POC been approved
   // sendText(completeFormatedDate);
@@ -33,7 +23,7 @@ const scheduleTestDrive = (conv, { date, time }) => {
       new BasicCard({
         text: `Enjoy your test drive of ${selectedCar.make} ${
           selectedCar.model
-          } at ${formatedDate} ${formatedTime}`,
+          } at ${formatedDateTime}`,
         title: `Appointment message from ${selectedCar.dealerName}`,
         image: new Image({
           url: BACKGROUND_IMAGE,
