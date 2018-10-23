@@ -93,15 +93,33 @@ const askForScheduleTestDrive = conv => {
   }
 };
 
-const selectCar = (conv, { carSelection }) => {
-  logger('Initial params for intent: select car', { carSelection });
+const selectCar = (conv, { carSelection }, option) => {
+  logger('Initial params for intent: select car', { carSelection, option } );
   const currentListedCars = (conv.user.storage as any).currentListedCars;
-  const selectedCar = currentListedCars[(carSelection as any) - 1];
+  let carSelectionIndex;
+
+  if (option) {
+    switch (option) {
+      case '001':
+        carSelectionIndex = 0;
+        break;
+      case '002':
+        carSelectionIndex = 1;
+        break;
+      default:
+        carSelectionIndex = 2;
+        break;
+    }
+  } else {
+    carSelectionIndex = (carSelection as any) - 1;
+  }
+
+  const selectedCar = currentListedCars[carSelectionIndex];
 
   if (selectedCar) {
     getCarDetails(selectedCar, conv);
 
-    if (conv.screen) {
+    if (conv.screen || option) {
       showCarDetailsCard(selectedCar, conv);
     }
 

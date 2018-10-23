@@ -19,6 +19,7 @@ app.intent('search car', searchCar as any);
 // Handle the Dialogflow intent named 'vehicle make and model'.
 // The intent collects the parameters named 'make' and 'model' for a desire car to search.
 app.intent('select car', selectCar as any);
+app.intent('select car by list', selectCar as any); // Listen the event "actions_intent_OPTION" of the list selection
 
 // Handle the Dialogflow intent named 'book joyride'.
 // The intent collects the parameters named 'date' and 'time' to be use in the test drive appointment schedule.
