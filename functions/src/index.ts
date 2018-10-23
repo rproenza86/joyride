@@ -4,7 +4,10 @@ import { dialogflow } from 'actions-on-google';
 import defaultWelcomeIntent from './fulfillments/defaultWelcomeIntent';
 import searchCar from './fulfillments/searchCar';
 import selectCar from './fulfillments/selectCar';
-import scheduleTestDrive from './fulfillments/scheduleTestDrive';
+import scheduleTestDrive, {
+  askForSignInPermissionConfirmation,
+  askForDateTimeConfirmation
+} from './fulfillments/scheduleTestDrive';
 
 // Instantiate the Dialogflow client.
 const app = dialogflow({ debug: true });
@@ -24,5 +27,7 @@ app.intent('select car by list', selectCar as any); // Listen the event "actions
 // Handle the Dialogflow intent named 'book joyride'.
 // The intent collects the parameters named 'date' and 'time' to be use in the test drive appointment schedule.
 app.intent('book joyride', scheduleTestDrive as any);
+app.intent('actions.intent.PERMISSION', askForSignInPermissionConfirmation as any);
+app.intent('actions.intent.DATETIME', askForDateTimeConfirmation as any);
 
 export const searchVehicle = functions.https.onRequest(app);
