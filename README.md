@@ -1,10 +1,11 @@
 # JOYRIDE
 
 Google Actions Application cars browser.
+> Multimodal conversational experience application which allows users  participate via voice and text as well as touchscreen interactions.
 
 ## *Joyride’s* summary
 
-This frictionless solution allows clients to find a car to buy and test drive in seconds 10x faster than the web or mobile application on the market.
+This frictionless solution **allows** clients to **find a car** to buy and to **book a test drive** in seconds 10x faster than the web or mobile application on the market.
 
 With Joyride Cars' Dealers will have access to more than 39 millions of American’s devices, such great potential that they are missing right now.
 

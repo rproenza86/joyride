@@ -3,6 +3,7 @@ import { BACKGROUND_IMAGE } from './../constants';
 import { BasicCard, Image, Suggestions, Button, Table } from 'actions-on-google';
 import { getCurrentListedCarList } from '../selectors/car';
 import { updateSelectedCar } from '../actions/carActions';
+import searchCar from './searchCar';
 
 const showCarDetailsTable = (car, conv) => {
   conv.close(
@@ -96,9 +97,10 @@ const askForScheduleTestDrive = conv => {
 };
 
 const selectCar = (conv, { carSelection }, option) => {
-  logger('Initial params for intent: select car', { carSelection, option } );
+  logger('Initial params for intent: select car', { carSelection, option });
   const currentListedCars = getCurrentListedCarList(conv);
   let carSelectionIndex;
+  let handledToSearch = false;
 
   if (option) {
     switch (option) {
@@ -108,6 +110,16 @@ const selectCar = (conv, { carSelection }, option) => {
       case '002':
         carSelectionIndex = 1;
         break;
+      case 'Nissan Altima':
+      case 'Honda Accord':
+      case 'Nissan Rogue':
+        const modelMakeArray: string[] = option.split(' ');
+        searchCar(conv, {
+          make: modelMakeArray[0],
+          model: modelMakeArray[1]
+        });
+        handledToSearch = true;
+        break;
       default:
         carSelectionIndex = 2;
         break;
@@ -116,23 +128,25 @@ const selectCar = (conv, { carSelection }, option) => {
     carSelectionIndex = (carSelection as any) - 1;
   }
 
-  const selectedCar = currentListedCars[carSelectionIndex];
+  if (!handledToSearch) {
+    const selectedCar = currentListedCars[carSelectionIndex];
 
-  if (selectedCar) {
-    getCarDetails(selectedCar, conv);
+    if (selectedCar) {
+      getCarDetails(selectedCar, conv);
 
-    if (conv.screen || option) {
-      showCarDetailsCard(selectedCar, conv);
+      if (conv.screen || option) {
+        showCarDetailsCard(selectedCar, conv);
+      }
+
+      askForScheduleTestDrive(conv);
+
+      updateSelectedCar(conv, selectedCar);
+    } else {
+      conv.close('Hey I could not find that car!');
+      conv.ask('Would you like to check others cars?');
+      // Suggestions will be placed at the end of the response
+      conv.ask(new Suggestions('Nissan Altima', 'Honda Accord', 'Nissan Rogue'));
     }
-
-    askForScheduleTestDrive(conv);
-
-    updateSelectedCar(conv, selectedCar);
-  } else {
-    conv.close('Hey I could not find that car!');
-    conv.ask('Would you like to check others cars?');
-    // Suggestions will be placed at the end of the response
-    conv.ask(new Suggestions('Nissan Altima', 'Honda Accord', 'Nissan Rogue'));
   }
 };
 

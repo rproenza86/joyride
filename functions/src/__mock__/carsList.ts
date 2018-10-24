@@ -1,4 +1,6 @@
-export const carsList = [
+import { ICar } from "../types";
+
+export const carsList: ICar[] = [
     {
         id: '001',
         dealerName: 'ROI Motors - DR Certification',

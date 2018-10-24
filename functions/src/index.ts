@@ -35,7 +35,7 @@ app.intent('actions.intent.DATETIME', askForDateTimeConfirmation as any);
 // Handle the Dialogflow intent named 'end conversation'.
 app.intent('end conversation', endConversation as any);
 
-// Handle the Dialogflow intent named 'end conversation'.
+// Handle the Dialogflow intent named 'no input handler'.
 app.intent('no input handler', noInputHandler as any);
 
 export const searchVehicle = functions.https.onRequest(app);
