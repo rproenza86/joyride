@@ -11,7 +11,7 @@ import { BACKGROUND_IMAGE } from './../constants';
 import { sendText } from './../services/messageNotification';
 import { logger } from './../utils/logger';
 import { getSelectedCar } from '../selectors/car';
-import { selectUserName } from '../selectors/user';
+import { selectUserName, selectUserGivenName } from '../selectors/user';
 import { updateUser } from '../actions/userActions';
 
 const notifySuccessfulBookText = (conv, formatedDateTime, name) => {
@@ -44,9 +44,10 @@ const endJoyrideBooking = conv => {
 };
 
 export const askForDateTime = conv => {
+  const userGivenName = selectUserGivenName(conv);
   const options = {
     prompts: {
-      initial: 'When would you like to book your JOYRIDE?',
+      initial: `When would you like to book your JOYRIDE ${userGivenName}?`,
       date: 'What day was that?',
       time: 'What time?'
     }
@@ -57,8 +58,8 @@ export const askForDateTime = conv => {
 export const askForDateTimeConfirmation = (conv, params, confirmationGranted) => {
   if (confirmationGranted) {
     const { month, year, day } = confirmationGranted.date;
-    const name  = selectUserName(conv);
-    const preFormatedDateTime = `${year}-${month}-${day} ${(confirmationGranted.time.hours)}`;
+    const name = selectUserName(conv);
+    const preFormatedDateTime = `${year}-${month}-${day} ${confirmationGranted.time.hours}`;
     const formatedDateTime = moment(preFormatedDateTime).format('LLLL');
 
     logger('askForDateTimeConfirmation intent: dateTime', {
@@ -92,7 +93,6 @@ export const askForSignInPermission = conv => {
 };
 
 export const askForSignInPermissionConfirmation = (conv, params, confirmationGranted) => {
-  const { name, email } = conv.user;
   logger('Initial params for intent: askForSignInPermissionConfirmation', {
     params,
     confirmationGranted,
@@ -112,7 +112,14 @@ export const askForSignInPermissionConfirmation = (conv, params, confirmationGra
 };
 
 const scheduleTestDrive = conv => {
-  askForSignInPermission(conv);
+  const user = selectUserName(conv);
+
+  if (user) {
+    askForDateTime(conv);
+  } else {
+    askForSignInPermission(conv);
+  }
+
   // TODO: Use just for demo til the POC been approved
   // sendText(completeFormatedDate);
 };
