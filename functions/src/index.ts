@@ -9,6 +9,7 @@ import scheduleTestDrive, {
   askForDateTimeConfirmation
 } from './fulfillments/scheduleTestDrive';
 import endConversation from './fulfillments/endConversation';
+import noInputHandler from './fulfillments/noInputHandler';
 
 // Instantiate the Dialogflow client.
 const app = dialogflow({ debug: true });
@@ -33,5 +34,8 @@ app.intent('actions.intent.DATETIME', askForDateTimeConfirmation as any);
 
 // Handle the Dialogflow intent named 'end conversation'.
 app.intent('end conversation', endConversation as any);
+
+// Handle the Dialogflow intent named 'end conversation'.
+app.intent('no input handler', noInputHandler as any);
 
 export const searchVehicle = functions.https.onRequest(app);
