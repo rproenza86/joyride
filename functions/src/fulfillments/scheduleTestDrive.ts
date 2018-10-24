@@ -10,6 +10,9 @@ import * as moment from 'moment';
 import { BACKGROUND_IMAGE } from './../constants';
 import { sendText } from './../services/messageNotification';
 import { logger } from './../utils/logger';
+import { getSelectedCar } from '../selectors/car';
+import { selectUserName } from '../selectors/user';
+import { updateUser } from '../actions/userActions';
 
 const notifySuccessfulBookText = (conv, formatedDateTime, name) => {
   const useName = name ? name + '! ' : '';
@@ -18,7 +21,7 @@ const notifySuccessfulBookText = (conv, formatedDateTime, name) => {
 };
 
 const notifySuccessfulBookCard = (conv, formatedDateTime, name) => {
-  const selectedCar = (conv.user.storage as any).selectedCar;
+  const selectedCar = getSelectedCar(conv);
   const useName = name ? name + '! ' : '';
 
   conv.close(
@@ -54,7 +57,7 @@ export const askForDateTime = conv => {
 export const askForDateTimeConfirmation = (conv, params, confirmationGranted) => {
   if (confirmationGranted) {
     const { month, year, day } = confirmationGranted.date;
-    const { name, email } = (conv.user.storage as any).bookingDetails.user;
+    const name  = selectUserName(conv);
     const preFormatedDateTime = `${year}-${month}-${day} ${(confirmationGranted.time.hours)}`;
     const formatedDateTime = moment(preFormatedDateTime).format('LLLL');
 
@@ -62,15 +65,14 @@ export const askForDateTimeConfirmation = (conv, params, confirmationGranted) =>
       formatedDateTime,
       preFormatedDateTime,
       name,
-      email,
       mail: conv.user.email,
       confirmationGranted
     });
 
-    notifySuccessfulBookText(conv, formatedDateTime, name.display);
+    notifySuccessfulBookText(conv, formatedDateTime, name);
 
     if (conv.screen) {
-      notifySuccessfulBookCard(conv, formatedDateTime, name.display);
+      notifySuccessfulBookCard(conv, formatedDateTime, name);
     }
 
     endJoyrideBooking(conv);
@@ -97,15 +99,7 @@ export const askForSignInPermissionConfirmation = (conv, params, confirmationGra
     user: conv.user
   });
 
-  (conv.user.storage as any) = {
-    ...(conv.user.storage as any),
-    bookingDetails: {
-      user: {
-        name,
-        email
-      }
-    }
-  };
+  updateUser(conv, conv.user.name);
 
   if (confirmationGranted) {
     askForDateTime(conv);

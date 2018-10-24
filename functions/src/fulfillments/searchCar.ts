@@ -1,5 +1,7 @@
 import { Image, List, Suggestions } from 'actions-on-google';
 import { carsList } from './../__mock__/carsList';
+import { getCarsListPointer } from '../selectors/car';
+import { updateCarsListPointer, updateCurrentListedCarList } from '../actions/carActions';
 
 const createCarList = arrayListedCars => {
   const LIST_INDEX = ['First one', 'Second one', 'Third one'];
@@ -37,7 +39,7 @@ const getPrices = arrayListedCars => {
 
 const initSearch = (make, model, conv) => {
   let response = `This is what I have found for ${make} ${model} car.`;
-  let carsListPointer = (conv.user.storage as any).carsListPointer || 0; // pointer use for pagination
+  let carsListPointer = getCarsListPointer(conv); // pointer use for pagination
   const carsListPointerLimit = carsListPointer + 3;
   const currentListedCars = [];
 
@@ -70,7 +72,7 @@ const searchCar = (conv, { make, model }) => {
   const initialQuestion =
     'Would you like to select one of this cars or do you prefer to check more cars from our search?';
 
-  if (carsListPointer === ((conv.user.storage as any).carsListPointer || 0)) {
+  if (carsListPointer === getCarsListPointer(conv)) {
     // Respond with a list with the first cars founds by the cars browser.
     conv.ask("Sorry but we don't have that kind of car in our inventory.");
     conv.ask('Would you like to find another car?');
@@ -84,8 +86,8 @@ const searchCar = (conv, { make, model }) => {
     );
   } else {
     // Respond with a list with the first cars founds by the cars browser.
-    (conv.user.storage as any).carsListPointer = carsListPointer; // Saving search state in the user profile storage
-    (conv.user.storage as any).currentListedCars = currentListedCars;
+    updateCarsListPointer(conv, carsListPointer); // Saving search state in the user profile storage
+    updateCurrentListedCarList(conv, currentListedCars);
 
     if (!conv.surface.capabilities.has('actions.capability.SCREEN_OUTPUT')) {
       conv.ask(response);

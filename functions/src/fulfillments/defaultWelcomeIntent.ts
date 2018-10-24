@@ -1,5 +1,5 @@
-import { Suggestions, BasicCard, Image, BasicCardOptions } from 'actions-on-google';
-import { logger } from './../utils/logger';
+import { BasicCard, BasicCardOptions, Image, Suggestions } from 'actions-on-google';
+import { selectUserName } from '../selectors/user';
 import { JOYRIDE_BANNER } from './../constants';
 
 const getDisclaimerText = (screen): string => {
@@ -34,9 +34,7 @@ const getDisclaimerCard = (screen): BasicCardOptions => {
 };
 
 const defaultWelcomeIntent = conv => {
-  const { payload } = conv.user.profile;
-  logger('User data', conv.user);
-  const name = payload ? ` ${payload.given_name}` : '';
+  const name = selectUserName(conv);
   conv.ask(`Welcome to Joy Ride ${name}!
 
     Ready to find your dream car in a matter of seconds?

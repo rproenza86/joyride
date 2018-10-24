@@ -8,6 +8,7 @@ import scheduleTestDrive, {
   askForSignInPermissionConfirmation,
   askForDateTimeConfirmation
 } from './fulfillments/scheduleTestDrive';
+import endConversation from './fulfillments/endConversation';
 
 // Instantiate the Dialogflow client.
 const app = dialogflow({ debug: true });
@@ -29,5 +30,8 @@ app.intent('select car by list', selectCar as any); // Listen the event "actions
 app.intent('book joyride', scheduleTestDrive as any);
 app.intent('actions.intent.PERMISSION', askForSignInPermissionConfirmation as any);
 app.intent('actions.intent.DATETIME', askForDateTimeConfirmation as any);
+
+// Handle the Dialogflow intent named 'end conversation'.
+app.intent('end conversation', endConversation as any);
 
 export const searchVehicle = functions.https.onRequest(app);

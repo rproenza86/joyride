@@ -1,6 +1,8 @@
 import { logger } from './../utils/logger';
 import { BACKGROUND_IMAGE } from './../constants';
 import { BasicCard, Image, Suggestions, Button, Table } from 'actions-on-google';
+import { getCurrentListedCarList } from '../selectors/car';
+import { updateSelectedCar } from '../actions/carActions';
 
 const showCarDetailsTable = (car, conv) => {
   conv.close(
@@ -95,7 +97,7 @@ const askForScheduleTestDrive = conv => {
 
 const selectCar = (conv, { carSelection }, option) => {
   logger('Initial params for intent: select car', { carSelection, option } );
-  const currentListedCars = (conv.user.storage as any).currentListedCars;
+  const currentListedCars = getCurrentListedCarList(conv);
   let carSelectionIndex;
 
   if (option) {
@@ -125,7 +127,7 @@ const selectCar = (conv, { carSelection }, option) => {
 
     askForScheduleTestDrive(conv);
 
-    (conv.user.storage as any).selectedCar = selectedCar;
+    updateSelectedCar(conv, selectedCar);
   } else {
     conv.close('Hey I could not find that car!');
     conv.ask('Would you like to check others cars?');
