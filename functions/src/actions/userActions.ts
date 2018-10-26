@@ -25,3 +25,25 @@ export const updateUser = (conv, user: IUserName): boolean => {
 
   return isUserSaved;
 };
+
+
+export const updateUserReservationDate = (conv, userReservationDate: string): boolean => {
+  const storage = conv.user.storage;
+  let isUserReservationDateSaved = false;
+
+  if (!storage) {
+    return isUserReservationDateSaved;
+  }
+
+  if (storage.joyride) {
+    conv.user.storage.joyride.userReservationDate = userReservationDate;
+    isUserReservationDateSaved = true;
+  }
+
+  if (!storage.joyride) {
+    conv.user.storage = { ...conv.user.storage, joyride: { userReservationDate } };
+    isUserReservationDateSaved = true;
+  }
+
+  return isUserReservationDateSaved;
+};

@@ -4,25 +4,30 @@ import {
   SimpleResponse,
   Suggestions,
   DateTime,
-  Permission
+  Permission,
+  SignIn
 } from 'actions-on-google';
 import * as moment from 'moment';
 import { BACKGROUND_IMAGE } from './../constants';
 import { sendText } from './../services/messageNotification';
 import { logger } from './../utils/logger';
 import { getSelectedCar } from '../selectors/car';
-import { selectUserName, selectUserGivenName } from '../selectors/user';
-import { updateUser } from '../actions/userActions';
+import { selectUserName, selectUserGivenName, selectUserReservationDate } from '../selectors/user';
+import { updateUser, updateUserReservationDate } from '../actions/userActions';
+import { sentJoyrideEmailNotification } from '../utils/mailgun';
 
 const notifySuccessfulBookText = (conv, formatedDateTime, name) => {
   const useName = name ? name + '! ' : '';
-  const textResponse = `Good news ${useName}Your are set. Your test drive appointment was scheduled for  ${formatedDateTime}. Check your email inbox for more details.`;
+  const textResponse = `Good news ${useName}Your are set. Your test drive appointment was scheduled for  ${formatedDateTime}.`;
+  logger('notifySuccessfulBookText', { textResponse });
+
   conv.close(new SimpleResponse({ text: textResponse, speech: textResponse }));
 };
 
 const notifySuccessfulBookCard = (conv, formatedDateTime, name) => {
   const selectedCar = getSelectedCar(conv);
   const useName = name ? name + '! ' : '';
+  logger('notifySuccessfulBookText', { selectedCar });
 
   conv.close(
     new BasicCard({
@@ -39,8 +44,41 @@ const notifySuccessfulBookCard = (conv, formatedDateTime, name) => {
 };
 
 const endJoyrideBooking = conv => {
-  conv.ask('Would you like to check others cars or end your search for today?');
   conv.ask(new Suggestions("Let's search another car", 'No thanks, end my search'));
+};
+
+const askAccountDetails = conv =>
+  conv.ask(
+    new SignIn(
+      'Do you want to receive notifications about your JOYRIDE? I need get your account details'
+    )
+  );
+
+export const askAccountDetailsConfirmation = (conv, input, signin) => {
+  const name = selectUserName(conv);
+  const formatedDateTime = selectUserReservationDate(conv);
+
+  notifySuccessfulBookText(conv, formatedDateTime, name);
+
+  if (conv.screen) {
+    notifySuccessfulBookCard(conv, formatedDateTime, name);
+  }
+
+  if (signin.status === 'OK') {
+    const payload = conv.user.profile.payload;
+    logger('askAccountDetailsConfirmation', { payload, userData: conv.user });
+    conv.close(`I got your account details needed to send you notifications. Would you like to check others cars or end your search for today? `);
+
+    sentJoyrideEmailNotification({
+      name: payload.name,
+      email: payload.email,
+      profileImg: payload.picture,
+      date: formatedDateTime
+    });
+  } else {
+    conv.close(`I won't be able to send you notifications, but that it's okay! Just don't forget your booking details! Would you like to check others cars or end your search for today?`);
+  }
+  endJoyrideBooking(conv);
 };
 
 export const askForDateTime = conv => {
@@ -61,6 +99,7 @@ export const askForDateTimeConfirmation = (conv, params, confirmationGranted) =>
     const name = selectUserName(conv);
     const preFormatedDateTime = `${year}-${month}-${day} ${confirmationGranted.time.hours}`;
     const formatedDateTime = moment(preFormatedDateTime).format('LLLL');
+    updateUserReservationDate(conv, formatedDateTime);
 
     logger('askForDateTimeConfirmation intent: dateTime', {
       formatedDateTime,
@@ -70,13 +109,7 @@ export const askForDateTimeConfirmation = (conv, params, confirmationGranted) =>
       confirmationGranted
     });
 
-    notifySuccessfulBookText(conv, formatedDateTime, name);
-
-    if (conv.screen) {
-      notifySuccessfulBookCard(conv, formatedDateTime, name);
-    }
-
-    endJoyrideBooking(conv);
+    askAccountDetails(conv);
   } else {
     conv.ask("Hey! We really need a date to book your JOYRIDE. Let's try again.");
     askForDateTime(conv);

@@ -59,3 +59,34 @@ https://youtu.be/xCkP9CCcKQQ
 3. Select first one
 4. Schedule test drive appointment on December 21 at 10am
 5. End my search
+
+## Project setup
+
+### Install npm dependencies
+
+`$ cd functions`
+`$ npm run install`
+
+### Import dialogflow project
+
+Use the `Cars-Browser.zip` file located on the dialogflow directory to import all the project intents, entities and others configurations.
+
+### Firebase functions environment variables config
+To send sms notifications:
+    `$ firebase functions:config:set twilio.sid="SID_VALUE"  --project universal-cars-browser`
+    `$ firebase functions:config:set twilio.token="TOKEN_VALUE" --project universal-cars-browser`
+
+To initialize the Actions on Google SDK:
+    `$ firebase functions:config:set joyride.client_id="CLIENT_ID" --project universal-cars-browser`
+
+To send  emails using mailgun:
+    `$ firebase functions:config:set mailgun.user="CLIENT_USER_NAME" --project universal-cars-browser`
+    `$ firebase functions:config:set mailgun.pass="CLIENT_PASSWORD" --project universal-cars-browser`
+
+### Deploy your code to firebase functions
+From the functions directory run :
+
+    `$ firebase deploy --only functions --project YOUR_PROJECT_NAME`
+
+### Update your fulfillment webhook url
+On dialogflow edit  URL entry off the Fulfillment section to use your Firebase functions url.

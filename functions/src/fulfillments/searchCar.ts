@@ -105,7 +105,7 @@ const searchCar = (conv, { make, model }) => {
     } else {
       // Create a list of cars to show in the screen
       if (currentListedCars.length) {
-        conv.ask(
+        conv.close(
           `Here you have a list of cars found with the price of ${getPrices(
             currentListedCars
           )} respectively.`

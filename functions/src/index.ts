@@ -6,13 +6,15 @@ import searchCar from './fulfillments/searchCar';
 import selectCar from './fulfillments/selectCar';
 import scheduleTestDrive, {
   askForSignInPermissionConfirmation,
-  askForDateTimeConfirmation
+  askForDateTimeConfirmation,
+  askAccountDetailsConfirmation
 } from './fulfillments/scheduleTestDrive';
 import endConversation from './fulfillments/endConversation';
 import noInputHandler from './fulfillments/noInputHandler';
+import { clientId } from './config';
 
 // Instantiate the Dialogflow client.
-const app = dialogflow({ debug: true });
+const app = dialogflow({ debug: true, clientId: clientId });
 
 // Handle the Dialogflow intent named 'Default Welcome Intent'.
 app.intent('Default Welcome Intent', defaultWelcomeIntent as any);
@@ -37,5 +39,8 @@ app.intent('end conversation', endConversation as any);
 
 // Handle the Dialogflow intent named 'no input handler'.
 app.intent('no input handler', noInputHandler as any);
+
+// Handle the Dialogflow intent named 'ask for account details'.
+app.intent('ask for account details', askAccountDetailsConfirmation as any);
 
 export const searchVehicle = functions.https.onRequest(app);
