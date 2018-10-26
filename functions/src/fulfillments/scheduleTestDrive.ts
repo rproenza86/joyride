@@ -67,7 +67,9 @@ export const askAccountDetailsConfirmation = (conv, input, signin) => {
   if (signin.status === 'OK') {
     const payload = conv.user.profile.payload;
     logger('askAccountDetailsConfirmation', { payload, userData: conv.user });
-    conv.close(`I got your account details needed to send you notifications. Would you like to check others cars or end your search for today? `);
+    conv.ask(
+      `I got your account details needed to send you notifications. Would you like to search for others cars or end your search for today? `
+    );
 
     sentJoyrideEmailNotification({
       name: payload.name,
@@ -76,8 +78,11 @@ export const askAccountDetailsConfirmation = (conv, input, signin) => {
       date: formatedDateTime
     });
   } else {
-    conv.close(`I won't be able to send you notifications, but that it's okay! Just don't forget your booking details! Would you like to check others cars or end your search for today?`);
+    conv.ask(
+      `I won't be able to send you notifications, but that it's okay! Just don't forget your booking details! Would you like to search for others cars or end your search for today?`
+    );
   }
+
   endJoyrideBooking(conv);
 };
 
@@ -85,7 +90,7 @@ export const askForDateTime = conv => {
   const userGivenName = selectUserGivenName(conv);
   const options = {
     prompts: {
-      initial: `When would you like to book your JOYRIDE ${userGivenName}?`,
+      initial: `On what day and at what time would you like to book your JOYRIDE ${userGivenName}?`,
       date: 'What day was that?',
       time: 'What time?'
     }

@@ -57,8 +57,9 @@ https://youtu.be/xCkP9CCcKQQ
 1. Talk to Joy Ride
 2. I want to find a Nissan Altima
 3. Select first one
-4. Schedule test drive appointment on December 21 at 10am
-5. End my search
+4. Book a JOYRIDE
+5. Tomorrow at 12pm
+6. End my search
 
 ## Project setup
 

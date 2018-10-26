@@ -35,7 +35,7 @@ const showCarDetailsTable = (car, conv) => {
         }
       ],
       buttons: new Button({
-        title: 'Details on dealer page',
+        title: 'More information ... ',
         url: car.url
       })
     })
@@ -62,7 +62,7 @@ const showCarDetailsCard = (car, conv) => {
         alt: 'Selected Car Image'
       }),
       buttons: new Button({
-        title: 'Details on dealer website',
+        title: 'More information ...',
         url: car.url
       })
     })
